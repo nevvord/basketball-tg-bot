@@ -8,9 +8,7 @@ let scores = {};
 bot.on('message', (msg) => {
   const { dice, chat, from, text } = msg
   const chatId = chat.id;
-
-  console.log('message: ', msg);
-
+  const userId = from.id;
 
   if (text && text === 'score') {
     const list = Object.keys(scores)
@@ -23,7 +21,7 @@ bot.on('message', (msg) => {
     let score = ''
 
     list.forEach((item) => {
-      score += `${scores[item].name}: ${scores[item].score}`
+      score += `${scores[item].name}: ${scores[item].score}\n`
     })
 
     bot.sendMessage(chatId, score);
@@ -44,8 +42,8 @@ bot.on('message', (msg) => {
 
 
     // Инициализируем счет для чата, если его еще нет
-    if (!scores[chatId]) {
-      scores[chatId] = {
+    if (!scores[userId]) {
+      scores[userId] = {
         name: from.username || from.first_name,
         score: 0
       };
@@ -54,22 +52,22 @@ bot.on('message', (msg) => {
     if (dice.value < 4) {
 
       setTimeout(() => {
-        bot.sendMessage(chatId, `Мимо лох! Стабильно: ${scores[chatId].score} очков`);
+        bot.sendMessage(chatId, `Мимо лох! Стабильно: ${scores[userId].score} очков`);
       }, 3000)
 
       return
     }
 
     // Обновляем счет и отправляем сообщение
-    scores[chatId].score += scores[chatId].score < 30 ? 3 : 1;
+    scores[userId].score += scores[userId].score < 30 ? 3 : 1;
     setTimeout(() => {
-      bot.sendMessage(chatId, `Попопопопал! ${scores[chatId].name} получил по очку: ${scores[chatId].score}`);
+      bot.sendMessage(chatId, `Попопопопал! ${scores[userId].name} получил по очку: ${scores[userId].score}`);
     }, 3000)
 
     // Проверяем, достиг ли кто-то 33 очка
     if (scores[chatId].score >= 33) {
       setTimeout(() => {
-        bot.sendMessage(chatId, `Хуя ты хитрый жук ${scores[chatId].name}! Ты победил`);
+        bot.sendMessage(chatId, `Хуя ты хитрый жук ${scores[userId].name}! Ты победил`);
         bot.sendMessage(chatId, 'Игра окончена');
 
         scores = JSON.parse('{}')
