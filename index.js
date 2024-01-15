@@ -65,7 +65,7 @@ bot.on('message', (msg) => {
     }, 3000)
 
     // Проверяем, достиг ли кто-то 33 очка
-    if (scores[chatId].score >= 33) {
+    if (scores[userId].score >= 33) {
       setTimeout(() => {
         bot.sendMessage(chatId, `Хуя ты хитрый жук ${scores[userId].name}! Ты победил`);
         bot.sendMessage(chatId, 'Игра окончена');
